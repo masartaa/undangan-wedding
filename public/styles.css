@@ -576,7 +576,141 @@ a:focus-visible {
 }
 
 .wishes {
-  min-height: 20rem;
+  padding-bottom: clamp(5rem, 12vw, 7rem);
+}
+
+.wishes-form {
+  display: grid;
+  width: min(100%, 36rem);
+  gap: 1.15rem;
+  margin: 2rem auto 0;
+  padding: clamp(1.2rem, 5vw, 2rem);
+  border: 1px solid var(--warna-garis);
+  background: var(--warna-panel);
+  text-align: left;
+  box-shadow: var(--bayangan-kartu);
+}
+
+.form-field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.form-field label {
+  color: var(--warna-teks);
+  font-size: 0.9rem;
+  font-weight: 620;
+}
+
+.form-field input,
+.form-field textarea {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--warna-garis);
+  border-radius: 0.35rem;
+  background: var(--warna-latar);
+  color: var(--warna-teks);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.form-field textarea {
+  min-height: 7rem;
+  resize: vertical;
+}
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+  color: var(--warna-halus);
+  opacity: 0.85;
+}
+
+.form-field__hint {
+  color: var(--warna-halus);
+  font-size: 0.78rem;
+}
+
+.wishes-form__honeypot {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.wishes-form__submit {
+  justify-self: start;
+}
+
+.wishes-form__status,
+.wishes-list__status {
+  min-height: 1.5em;
+  margin: 0;
+  color: var(--warna-halus);
+  font-size: 0.88rem;
+}
+
+.wishes-list {
+  width: min(100%, 42rem);
+  margin: 3rem auto 0;
+}
+
+.wishes-list__title {
+  margin: 0 0 0.75rem;
+  color: var(--warna-utama);
+  font-family: var(--font-judul);
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+.wishes-list__items {
+  display: grid;
+  gap: 0.85rem;
+  margin-top: 1rem;
+  text-align: left;
+}
+
+.wish-card {
+  padding: 1.15rem 1.25rem;
+  border: 1px solid var(--warna-garis);
+  border-left: 3px solid var(--warna-aksen);
+  background: var(--warna-panel);
+  overflow-wrap: anywhere;
+}
+
+.wish-card__name {
+  margin: 0;
+  color: var(--warna-utama);
+  font-family: var(--font-judul);
+  font-size: 1.15rem;
+  font-weight: 400;
+}
+
+.wish-card__date {
+  display: block;
+  margin-top: 0.15rem;
+  color: var(--warna-halus);
+  font-size: 0.78rem;
+}
+
+.wish-card__message {
+  margin: 0.65rem 0 0;
+  color: var(--warna-teks);
+  font-size: 0.94rem;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.wishes-list__empty {
+  margin: 1rem 0;
+  color: var(--warna-halus);
+}
+
+.wishes-list__more {
+  margin: 1.25rem auto 0;
 }
 
 .section--closing {

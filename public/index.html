@@ -250,7 +250,66 @@
         <span class="ornament" aria-hidden="true">
           <img src="/images/ornament.svg" alt="" width="44" height="44" loading="lazy" />
         </span>
-        <p class="section__intro">Ruang untuk doa dan ucapan akan hadir nanti.</p>
+        <p class="section__intro">Bagikan doa dan ucapan terbaik untuk kedua mempelai.</p>
+        <form class="wishes-form" id="wishes-form">
+          <div class="form-field">
+            <label for="wish-name">Nama</label>
+            <input
+              id="wish-name"
+              name="name"
+              type="text"
+              maxlength="80"
+              autocomplete="name"
+              placeholder="Nama Anda"
+              required
+            />
+          </div>
+          <div class="form-field">
+            <label for="wish-message">Ucapan dan doa</label>
+            <textarea
+              id="wish-message"
+              name="message"
+              maxlength="300"
+              rows="4"
+              placeholder="Tuliskan doa dan ucapan Anda..."
+              required
+            ></textarea>
+            <span class="form-field__hint">Maksimal 300 karakter.</span>
+          </div>
+          <div class="wishes-form__honeypot" aria-hidden="true">
+            <label for="wish-website">Jangan isi kolom ini</label>
+            <input
+              id="wish-website"
+              name="website"
+              type="text"
+              tabindex="-1"
+              autocomplete="off"
+            />
+          </div>
+          <button class="button button--primary wishes-form__submit" id="wish-submit" type="submit">
+            Kirim Ucapan
+          </button>
+          <p
+            class="wishes-form__status"
+            id="wishes-form-status"
+            role="status"
+            aria-live="polite"
+          ></p>
+        </form>
+
+        <div class="wishes-list" aria-labelledby="wishes-list-title">
+          <h3 class="wishes-list__title" id="wishes-list-title">Doa dan ucapan</h3>
+          <p class="wishes-list__status" id="wishes-list-status" role="status" aria-live="polite">
+            Memuat ucapan...
+          </p>
+          <div class="wishes-list__items" id="wishes-list"></div>
+          <p class="wishes-list__empty" id="wishes-empty" hidden>
+            Jadilah yang pertama menyampaikan doa dan ucapan.
+          </p>
+          <button class="button button--outline wishes-list__more" id="wishes-load-more" type="button" hidden>
+            Muat lebih banyak
+          </button>
+        </div>
       </section>
 
       <section class="section section--closing" aria-label="Penutup">

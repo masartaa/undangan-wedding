@@ -8,7 +8,7 @@ Turunan dari PRD Website Undangan Pernikahan. Dipakai untuk vibe coding per fase
 2. Awali setiap sesi dengan menempelkan **Konteks Proyek** (di bawah), lalu **prompt fasenya**.
 3. Mulai Fase 1 dst. dengan menambahkan ringkasan 5-10 baris kondisi kode terakhir (struktur folder, apa yang sudah jalan).
 4. Setelah fase selesai: uji sesuai bagian "Selesai jika", lalu **commit** sebelum lanjut.
-5. Setelah **Fase 2** undangan sudah bisa dibagikan, walaupun dashboard belum jadi. Target bagikan paling lambat **12 Desember 2026**.
+5. Setelah **Fase 2** undangan sudah bisa dibagikan dan menerima ucapan, walaupun dashboard belum jadi. Target bagikan paling lambat **12 Desember 2026**.
 
 Catatan: pilihan stack (HTML/CSS/JS biasa tanpa framework di atas Cloudflare Pages) adalah usulan agar sederhana dan mudah dirawat. Ganti di Konteks Proyek jika Anda ingin framework lain.
 
@@ -39,7 +39,7 @@ PRINSIP
 - Bahasa antarmuka: Indonesia
 - JANGAN menambah fitur di luar PRD: tidak ada amplop digital/rekening, live streaming, QR check-in, multi-bahasa, atau multi-pengguna.
 
-FASE SAAT INI: [Fase 0]
+FASE SAAT INI: [Fase 2 - Ucapan saja, tanpa RSVP]
 ```
 
 ---
@@ -53,7 +53,6 @@ Tugas:
 1. Buat struktur proyek: public/ (halaman statis), functions/api/ (endpoint), migrations/ (SQL D1), wrangler.toml, README.md.
 2. Rancang skema D1 dan tulis sebagai file migrasi SQL:
    - event_config: satu baris konfigurasi acara (JSON): tanggal-waktu, nama tempat, alamat, tautan Maps, tema, teks, foto, musik
-   - rsvp: id, name, status (hadir/tidak), guests, created_at
    - wishes: id, name, message, hidden (0/1), created_at
    - admin: satu akun (username, password_hash, salt, created_at)
    - rate_limit: key, count, window_start (untuk pembatasan kiriman)
@@ -98,32 +97,31 @@ Jangan membuat RSVP, API, atau dashboard di fase ini.
 
 ---
 
-## Fase 2 - RSVP dan ucapan
+## Fase 2 - Ucapan saja (tanpa RSVP)
 
 ```
-FASE 2 - RSVP DAN UCAPAN
+FASE 2 - UCAPAN (TANPA RSVP)
 
-Tambahkan fitur untuk tamu mengirim konfirmasi kehadiran dan ucapan.
+Tambahkan fitur agar tamu dapat mengirim dan membaca ucapan. RSVP ditiadakan sesuai permintaan; jangan membuat formulir, API, atau tabel RSVP.
 
 Frontend:
-- Formulir RSVP: nama, status (hadir / tidak hadir), jumlah orang (1-5, hanya jika hadir).
 - Formulir ucapan: nama dan pesan (maksimal 300 karakter).
 - Daftar ucapan di halaman publik (hanya yang hidden = 0), terbaru di atas, dengan "muat lebih banyak".
-- Pesan sukses/gagal yang jelas dalam bahasa Indonesia; nama tamu otomatis terisi dari ?to= bila ada.
+- Pesan sukses/gagal dan batas kiriman yang jelas dalam bahasa Indonesia; nama tamu otomatis terisi dari ?to= bila ada.
 
 Backend (Pages Functions + D1):
-- POST /api/rsvp, POST /api/wishes, GET /api/wishes?page=N.
+- POST /api/wishes, GET /api/wishes?page=N.
 - Validasi sisi server: panjang, tipe, nilai yang diperbolehkan; tolak input kosong atau berlebihan.
-- Perlindungan spam: field honeypot tersembunyi, pembatasan kiriman per IP (mis. 5 kiriman per 10 menit memakai tabel rate_limit), dan kembalikan 429 bila terlampaui.
+- Perlindungan spam: field honeypot tersembunyi, pembatasan 5 kiriman per 10 menit per IP memakai tabel rate_limit, dan kembalikan 429 bila terlampaui.
 - Escape semua output saat ditampilkan; jangan pernah memakai innerHTML untuk teks dari tamu.
 - Jangan mengumpulkan email atau nomor telepon.
 
-Jangan membuat dashboard di fase ini.
+Jangan membuat RSVP atau dashboard di fase ini.
 ```
 
-**Selesai jika:** tamu bisa mengirim RSVP dan ucapan, data masuk ke D1, ucapan tampil di halaman, kiriman beruntun ditolak, dan teks seperti `<script>alert(1)</script>` tampil sebagai teks biasa.
+**Selesai jika:** tamu bisa mengirim ucapan, data masuk ke D1, ucapan tampil dengan paginasi, kiriman beruntun ditolak, dan teks seperti `<script>alert(1)</script>` tampil sebagai teks biasa.
 
-> Setelah fase ini undangan sudah layak dibagikan ke tamu online.
+> Setelah fase ini tamu dapat mengirim doa dan ucapan melalui undangan.
 
 ---
 
@@ -148,7 +146,7 @@ Fitur:
 - GET /api/config (publik, hanya data yang aman ditampilkan) dan halaman publik membaca konfigurasi dari sini, termasuk hitung mundur, tombol kalender, dan tautan Maps.
 - Tombol "Lihat undangan" yang membuka halaman publik di tab baru.
 
-Jangan membuat pengaturan tema/konten atau rekap RSVP di fase ini.
+Jangan membuat pengaturan tema/konten atau rekap ucapan di fase ini.
 ```
 
 **Selesai jika:** login berhasil dan salah kata sandi ditolak, tanggal/tempat/waktu diubah di dashboard lalu halaman publik ikut berubah, `/api/admin/*` tanpa login mengembalikan 401.
@@ -174,7 +172,7 @@ Konten:
 - Musik: unggah atau tautkan satu berkas musik latar dan pilihan aktif/nonaktif.
 - Semua teks yang disimpan harus di-escape saat ditampilkan di halaman publik.
 
-Jangan membuat rekap RSVP/ucapan di fase ini.
+Jangan membuat rekap ucapan di fase ini.
 ```
 
 **Selesai jika:** mengganti jenis tema dan warna di dashboard langsung mengubah tampilan publik, teks dan foto berubah tanpa menyentuh kode, dan warna dengan kontras buruk memicu peringatan.
@@ -184,12 +182,11 @@ Jangan membuat rekap RSVP/ucapan di fase ini.
 ## Fase 5 - Rekap dan finalisasi
 
 ```
-FASE 5 - REKAP DAN FINALISASI
+FASE 5 - UCAPAN DAN FINALISASI
 
 Dashboard:
-- Halaman RSVP: tabel daftar RSVP, ringkasan (jumlah hadir, tidak hadir, total orang), pencarian dan filter.
 - Halaman ucapan: daftar ucapan, tombol sembunyikan/tampilkan dan hapus.
-- Ekspor RSVP dan ucapan ke CSV (pastikan terbuka benar di Excel, UTF-8 dengan BOM).
+- Ekspor ucapan ke CSV (pastikan terbuka benar di Excel, UTF-8 dengan BOM).
 
 Halaman publik:
 - Selesaikan galeri foto: grid responsif, lazy loading, tampilan besar (lightbox) yang bisa ditutup dengan tombol dan geser.
@@ -201,10 +198,10 @@ Tinjauan akhir keamanan (laporkan hasilnya sebagai daftar periksa):
 - Header keamanan dasar (Content-Security-Policy, X-Content-Type-Options, Referrer-Policy) lewat berkas _headers.
 - Rate limit dan honeypot aktif; noindex terpasang.
 
-Siapkan juga catatan "cara mengelola setelah acara": ekspor data, dan cara menonaktifkan formulir RSVP/ucapan setelah hari acara.
+Siapkan juga catatan "cara mengelola setelah acara": ekspor ucapan dan cara menonaktifkan formulir ucapan setelah hari acara.
 ```
 
-**Selesai jika:** rekap RSVP dan ekspor CSV benar, moderasi ucapan berfungsi, skor performa mobile memadai, daftar periksa keamanan lolos, lalu uji dengan 5-10 tamu sebelum dibagikan ke semua tamu online.
+**Selesai jika:** moderasi ucapan dan ekspor CSV benar, skor performa mobile memadai, daftar periksa keamanan lolos, lalu uji kirim ucapan dengan 5-10 tamu sebelum dibagikan ke semua tamu online.
 
 ---
 

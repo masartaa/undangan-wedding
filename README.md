@@ -4,7 +4,7 @@ Undangan dibuat dengan HTML, CSS, dan JavaScript tanpa framework atau build step
 
 ## Pratinjau lokal
 
-Pastikan Node.js dan npm tersedia, lalu dari direktori proyek jalankan:
+Pastikan Node.js dan npm tersedia, lalu ikuti langkah penyiapan database D1 di bawah ini. Dari direktori proyek jalankan:
 
 ```bash
 npx wrangler pages dev public
@@ -24,11 +24,41 @@ Ubah `public/config/event.json` untuk memperbarui:
 
 Nama tamu pada sampul bisa dikirim melalui tautan seperti `https://undangan-wedding.pages.dev/?to=Budi`. Nama ditampilkan sebagai teks, bukan sebagai HTML.
 
-Galeri dan bagian ucapan masih berupa kerangka. Formulir RSVP, API RSVP/ucapan, serta dashboard admin belum termasuk fase ini.
+Ucapan dan doa tamu disimpan di Cloudflare D1. RSVP sengaja ditiadakan. Galeri masih berupa kerangka, dan dashboard admin belum termasuk fase ini.
+
+## Database D1 dan ucapan
+
+1. Login ke Cloudflare dan buat database D1:
+
+   ```bash
+   npx wrangler login
+   npx wrangler d1 create undangan-wedding-dev
+   ```
+
+2. Salin ID database dari hasil perintah, lalu ganti `database_id = "change-me"` di `wrangler.toml` dengan ID tersebut. Jangan mengubah nama binding `DB`; Pages Functions menggunakan binding ini.
+
+3. Terapkan migrasi D1 lokal untuk pratinjau:
+
+   ```bash
+   npx wrangler d1 migrations apply undangan-wedding-dev --local
+   npx wrangler pages dev public
+   ```
+
+   Buka URL yang ditampilkan Wrangler, biasanya `http://localhost:8788`.
+
+4. Terapkan migrasi pada database Cloudflare:
+
+   ```bash
+   npx wrangler d1 migrations apply undangan-wedding-dev --remote
+   ```
+
+5. Di pengaturan Cloudflare Pages, pastikan binding D1 bernama `DB` tersedia pada environment Production dan menunjuk ke database dengan ID yang sama. Binding `DB` diperlukan untuk membaca dan menyimpan ucapan.
+
+API ucapan menerima nama maksimal 80 karakter dan pesan maksimal 300 karakter. Daftar menampilkan 10 ucapan terbaru per halaman. Pengiriman dibatasi 5 kali per alamat IP tiap 10 menit; IP di-hash sebelum disimpan sebagai kunci rate limit. Formulir menggunakan honeypot, dan ucapan tamu ditampilkan sebagai teks, bukan HTML.
 
 ## Deploy ke Cloudflare Pages
 
-1. Pasang Node.js, lalu autentikasi ke Cloudflare:
+1. Pastikan Node.js sudah terpasang dan autentikasi ke Cloudflare jika belum:
 
    ```bash
    npx wrangler login
@@ -59,7 +89,9 @@ public/
 ├── index.html
 └── robots.txt
 functions/
-└── api/health.js
+└── api/
+    ├── health.js
+    └── wishes.js
 migrations/
 └── 001_init.sql
 wrangler.toml

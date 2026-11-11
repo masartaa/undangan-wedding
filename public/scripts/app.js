@@ -7,6 +7,21 @@ const musicLabel = document.querySelector("#music-label");
 const musicStatus = document.querySelector("#music-status");
 const musicPlayer = document.querySelector("#background-music");
 const configError = document.querySelector("#config-error");
+const wishesForm = document.querySelector("#wishes-form");
+const wishNameInput = document.querySelector("#wish-name");
+const wishesFormStatus = document.querySelector("#wishes-form-status");
+const wishesList = document.querySelector("#wishes-list");
+const wishesListStatus = document.querySelector("#wishes-list-status");
+const wishesEmptyState = document.querySelector("#wishes-empty");
+const wishesLoadMoreButton = document.querySelector("#wishes-load-more");
+const wishSubmitButton = document.querySelector("#wish-submit");
+const MAX_GUEST_NAME_LENGTH = 80;
+const WISH_PAGE_SIZE = 10;
+
+let wishesPage = 1;
+let wishesHaveMore = true;
+let wishesLoading = false;
+let wishesReloadRequested = false;
 
 const requireText = (value, label) => {
   if (typeof value !== "string" || value.trim() === "") {
@@ -35,12 +50,17 @@ const getSafeHttpsUrl = (value, label) => {
   return url.href;
 };
 
-const showGuestName = () => {
+const getGuestName = () => {
   const requestedName = new URLSearchParams(window.location.search).get("to");
   const name = requestedName?.trim();
-  const guestName = name ? Array.from(name).slice(0, 100).join("") : "";
+  return name ? Array.from(name).slice(0, MAX_GUEST_NAME_LENGTH).join("") : "";
+};
+
+const showGuestName = () => {
+  const guestName = getGuestName();
 
   document.querySelector("#guest-name").textContent = guestName || "Bapak/Ibu/Saudara/i";
+  wishNameInput.value = guestName;
 };
 
 const updateCountdown = (start, end) => {
@@ -167,6 +187,178 @@ const setMetaContent = (selector, value) => {
   }
 };
 
+const createWishCard = (wish) => {
+  const card = document.createElement("article");
+  card.className = "wish-card";
+
+  const name = document.createElement("h4");
+  name.className = "wish-card__name";
+  name.textContent = wish.name;
+  card.append(name);
+
+  const date = document.createElement("time");
+  date.className = "wish-card__date";
+
+  const createdAt =
+    typeof wish.created_at === "string" && !/(?:Z|[+-]\d{2}:\d{2})$/i.test(wish.created_at)
+      ? `${wish.created_at.replace(" ", "T")}Z`
+      : wish.created_at;
+  const parsedDate = new Date(createdAt);
+
+  if (!Number.isNaN(parsedDate.getTime())) {
+    date.dateTime = parsedDate.toISOString();
+    date.textContent = formatDate(parsedDate, "Asia/Jakarta", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23"
+    });
+  }
+
+  card.append(date);
+
+  const message = document.createElement("p");
+  message.className = "wish-card__message";
+  message.textContent = wish.message;
+  card.append(message);
+  return card;
+};
+
+const loadWishes = async ({ reset = false } = {}) => {
+  if (wishesLoading) {
+    wishesReloadRequested ||= reset;
+    return;
+  }
+
+  if (!wishesHaveMore && !reset) {
+    return;
+  }
+
+  if (reset) {
+    wishesPage = 1;
+    wishesHaveMore = true;
+    wishesList.replaceChildren();
+    wishesEmptyState.hidden = true;
+    wishesListStatus.textContent = "Memuat ucapan...";
+  }
+
+  wishesLoading = true;
+  wishesLoadMoreButton.hidden = false;
+  wishesLoadMoreButton.disabled = true;
+  wishesLoadMoreButton.textContent = "Memuat...";
+
+  try {
+    const response = await fetch(`/api/wishes?page=${wishesPage}`, {
+      headers: { Accept: "application/json" }
+    });
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error("Daftar ucapan belum dapat dimuat. Silakan coba lagi.");
+    }
+
+    if (
+      !Array.isArray(result.wishes) ||
+      result.wishes.length > WISH_PAGE_SIZE ||
+      typeof result.hasMore !== "boolean" ||
+      result.wishes.some(
+        (wish) =>
+          typeof wish.name !== "string" ||
+          typeof wish.message !== "string" ||
+          typeof wish.created_at !== "string"
+      )
+    ) {
+      throw new Error("Daftar ucapan menerima data yang tidak valid.");
+    }
+
+    for (const wish of result.wishes) {
+      wishesList.append(createWishCard(wish));
+    }
+
+    wishesHaveMore = result.hasMore;
+    wishesPage += 1;
+    wishesListStatus.textContent = "";
+    wishesEmptyState.hidden = wishesList.childElementCount > 0;
+    wishesLoadMoreButton.hidden = !wishesHaveMore;
+    wishesLoadMoreButton.textContent = "Muat lebih banyak";
+  } catch (error) {
+    console.error("Daftar ucapan gagal dimuat.", error);
+    wishesHaveMore = true;
+    wishesListStatus.textContent =
+      wishesPage === 1
+        ? "Ucapan belum dapat dimuat. Periksa koneksi, lalu coba lagi."
+        : "Ucapan berikutnya belum dapat dimuat. Silakan coba lagi.";
+    wishesLoadMoreButton.textContent = "Coba lagi";
+  } finally {
+    wishesLoading = false;
+    wishesLoadMoreButton.disabled = false;
+
+    if (wishesReloadRequested) {
+      wishesReloadRequested = false;
+      void loadWishes({ reset: true });
+    }
+  }
+};
+
+const submitWish = async (event) => {
+  event.preventDefault();
+
+  if (!wishesForm.reportValidity()) {
+    return;
+  }
+
+  const name = wishNameInput.value.trim().normalize("NFC");
+  const message = document.querySelector("#wish-message").value.trim().normalize("NFC");
+
+  if (!name || !message) {
+    wishesFormStatus.textContent = "Nama dan ucapan tidak boleh kosong.";
+    return;
+  }
+
+  wishesFormStatus.textContent = "";
+  wishSubmitButton.disabled = true;
+  wishSubmitButton.textContent = "Mengirim...";
+
+  try {
+    const response = await fetch("/api/wishes", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        name,
+        message,
+        website: document.querySelector("#wish-website").value
+      })
+    });
+    const result = await response.json();
+
+    if (response.status === 429) {
+      wishesFormStatus.textContent = "Batas kiriman tercapai. Silakan coba lagi beberapa saat lagi.";
+      return;
+    }
+
+    if (!response.ok) {
+      wishesFormStatus.textContent =
+        response.status === 400 && typeof result.error === "string"
+          ? result.error
+          : "Ucapan belum dapat dikirim. Silakan coba lagi.";
+      return;
+    }
+
+    wishesForm.reset();
+    showGuestName();
+    wishesFormStatus.textContent = "Terima kasih, ucapan dan doa Anda berhasil dikirim.";
+    await loadWishes({ reset: true });
+  } catch (error) {
+    console.error("Ucapan gagal dikirim.", error);
+    wishesFormStatus.textContent = "Ucapan belum terkirim. Periksa koneksi, lalu coba lagi.";
+  } finally {
+    wishSubmitButton.disabled = false;
+    wishSubmitButton.textContent = "Kirim Ucapan";
+  }
+};
+
 const loadConfig = async () => {
   const response = await fetch(configUrl, { headers: { Accept: "application/json" } });
   if (!response.ok) {
@@ -244,6 +436,9 @@ const loadConfig = async () => {
 };
 
 showGuestName();
+wishesForm.addEventListener("submit", submitWish);
+wishesLoadMoreButton.addEventListener("click", () => loadWishes());
+void loadWishes({ reset: true });
 
 openInvitationButton.addEventListener("click", () => {
   document.body.classList.add("invitation-open");
