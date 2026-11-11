@@ -1,60 +1,318 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f8f5ed" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta
+      name="description"
+      content="Dengan penuh sukacita, kami mengundang Anda untuk hadir di resepsi pernikahan kami."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:title" content="Undangan Pernikahan" />
+    <meta
+      property="og:description"
+      content="Dengan penuh sukacita, kami mengundang Anda untuk hadir di resepsi pernikahan kami."
+    />
+    <meta property="og:url" content="https://undangan-wedding.pages.dev/" />
+    <meta
+      property="og:image"
+      content="https://undangan-wedding.pages.dev/images/og-image.png"
+    />
+    <meta
+      property="og:image:secure_url"
+      content="https://undangan-wedding.pages.dev/images/og-image.png"
+    />
+    <meta property="og:image:type" content="image/png" />
+    <meta
+      property="og:image:alt"
+      content="Undangan resepsi pernikahan, 3 Januari 2027, di Koffie Goen Tuntang"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Undangan Pernikahan" />
+    <meta
+      name="twitter:description"
+      content="Dengan penuh sukacita, kami mengundang Anda untuk hadir di resepsi pernikahan kami."
+    />
+    <meta
+      name="twitter:image"
+      content="https://undangan-wedding.pages.dev/images/og-image.png"
+    />
     <title>Undangan Pernikahan</title>
-    <meta name="description" content="Undangan pernikahan akan segera hadir." />
-    <style>
-      :root {
-        --warna-latar: #f9f7f1;
-        --warna-utama: #d4af37;
-        --warna-aksen: #f3e6b8;
-        --warna-teks: #1f1f1f;
-      }
-
-      * { box-sizing: border-box; }
-
-      body {
-        margin: 0;
-        min-height: 100vh;
-        display: grid;
-        place-items: center;
-        font-family: Arial, sans-serif;
-        background: linear-gradient(135deg, var(--warna-latar), #fffaf0);
-        color: var(--warna-teks);
-      }
-
-      .card {
-        text-align: center;
-        padding: 3rem 1.5rem;
-        max-width: 640px;
-        width: min(90vw, 640px);
-        border: 1px solid rgba(212, 175, 55, 0.3);
-        background: rgba(255, 255, 255, 0.7);
-        border-radius: 18px;
-        box-shadow: 0 12px 32px rgba(31, 31, 31, 0.06);
-      }
-
-      h1 {
-        margin: 0 0 1rem;
-        font-size: clamp(2rem, 5vw, 3rem);
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--warna-utama);
-      }
-
-      p {
-        margin: 0;
-        font-size: 1rem;
-        line-height: 1.7;
-      }
-    </style>
+    <link rel="canonical" href="https://undangan-wedding.pages.dev/" />
+    <link rel="icon" href="/images/ornament.svg" type="image/svg+xml" />
+    <link rel="preload" href="/images/cover-ornament.svg" as="image" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="module" src="/scripts/app.js"></script>
   </head>
   <body>
-    <main class="card">
-      <h1>Undangan segera hadir</h1>
-      <p>Website undangan pernikahan sedang dalam tahap pengembangan.</p>
+    <a class="skip-link" href="#home">Lewati ke undangan</a>
+
+    <header class="cover" aria-labelledby="cover-title">
+      <div class="cover__ornament" aria-hidden="true"></div>
+      <div class="cover__content">
+        <p class="eyebrow">Undangan resepsi pernikahan</p>
+        <span class="cover__rule" aria-hidden="true"></span>
+        <h1 class="cover__title" id="cover-title">The Wedding of</h1>
+        <p class="cover__names">
+          <span data-couple-name="groom">Nama Mempelai Pria</span>
+          <span class="ampersand" aria-hidden="true">&amp;</span>
+          <span data-couple-name="bride">Nama Mempelai Wanita</span>
+        </p>
+        <span class="cover__rule cover__rule--short" aria-hidden="true"></span>
+        <p class="cover__recipient-label">Kepada Yth.</p>
+        <p class="cover__recipient" id="guest-name">Bapak/Ibu/Saudara/i</p>
+        <p class="cover__note">Dengan penuh rasa syukur, kami mengundang Anda untuk hadir.</p>
+        <button class="button button--primary cover__button" id="open-invitation" type="button">
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M3 8.5 12 14l9-5.5M4.5 6h15A1.5 1.5 0 0 1 21 7.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 16.5v-9A1.5 1.5 0 0 1 4.5 6Z" />
+          </svg>
+          Buka Undangan
+        </button>
+      </div>
+      <p class="cover__date" data-event-date></p>
+    </header>
+
+    <main>
+      <section class="section hero" id="home" aria-labelledby="home-title">
+        <p class="eyebrow">Assalamu'alaikum warahmatullahi wabarakatuh</p>
+        <span class="ornament" aria-hidden="true">
+          <img src="/images/ornament.svg" alt="" width="44" height="44" />
+        </span>
+        <h2 class="section__title" id="home-title">
+          Dengan memohon rahmat dan rida Allah SWT
+        </h2>
+        <p class="section__intro" data-welcome-message>
+          Dengan penuh rasa syukur, kami mengundang Anda untuk hadir di hari bahagia kami.
+        </p>
+        <p class="hero__names">
+          <span data-couple-name="groom">Nama Mempelai Pria</span>
+          <span class="ampersand" aria-hidden="true">&amp;</span>
+          <span data-couple-name="bride">Nama Mempelai Wanita</span>
+        </p>
+        <p class="hero__date" data-event-date></p>
+        <button class="button button--quiet" id="music-toggle" type="button" disabled>
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M9 18V5l12-2v13M9 18a3 3 0 1 1-3-3c1.66 0 3 1.34 3 3Zm12-2a3 3 0 1 1-3-3c1.66 0 3 1.34 3 3ZM9 8l12-2" />
+          </svg>
+          <span id="music-label">Musik latar belum ditambahkan</span>
+        </button>
+        <audio id="background-music" preload="none"></audio>
+        <p class="music-status" id="music-status" role="status" aria-live="polite"></p>
+      </section>
+
+      <section
+        class="section section--tinted couple"
+        id="mempelai"
+        aria-labelledby="couple-title"
+      >
+        <p class="eyebrow">Dengan penuh kebahagiaan</p>
+        <h2 class="section__title" id="couple-title">Mempelai</h2>
+        <div class="couple__grid">
+          <article class="person">
+            <div class="person__monogram" aria-hidden="true">
+              <span data-initial="groom">M</span>
+            </div>
+            <h3 class="person__name" data-couple-name="groom">Nama Mempelai Pria</h3>
+            <p class="person__parents">
+              Putra dari<br />
+              <span data-parent-names="groom">Bapak dan Ibu Nama Orang Tua</span>
+            </p>
+          </article>
+          <span class="couple__ampersand" aria-hidden="true">&amp;</span>
+          <article class="person">
+            <div class="person__monogram" aria-hidden="true">
+              <span data-initial="bride">M</span>
+            </div>
+            <h3 class="person__name" data-couple-name="bride">Nama Mempelai Wanita</h3>
+            <p class="person__parents">
+              Putri dari<br />
+              <span data-parent-names="bride">Bapak dan Ibu Nama Orang Tua</span>
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section event" id="acara" aria-labelledby="event-title">
+        <p class="eyebrow">Catat tanggalnya</p>
+        <h2 class="section__title" id="event-title">Acara</h2>
+        <div class="event__card">
+          <p class="event__kind">Resepsi Pernikahan</p>
+          <p class="event__date" data-event-date></p>
+          <p class="event__time" data-event-time></p>
+          <span class="event__divider" aria-hidden="true"></span>
+          <h3 class="event__venue" data-venue-name>Koffie Goen Tuntang</h3>
+          <p class="event__address" data-venue-address>Koffie Goen Tuntang</p>
+          <div class="event__actions">
+            <a
+              class="button button--primary"
+              data-maps-link
+              href="https://maps.app.goo.gl/E8JC392ENFyyGNjJA"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z" />
+                <circle cx="12" cy="10" r="2.5" />
+              </svg>
+              Buka di Google Maps
+            </a>
+            <button class="button button--outline" id="calendar-download" type="button">
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <rect x="3" y="5" width="18" height="16" rx="2" />
+                <path d="M16 3v4M8 3v4M3 10h18m-9 4v5m-2.5-2.5H14" />
+              </svg>
+              Tambah ke Kalender
+            </button>
+          </div>
+        </div>
+        <div class="countdown">
+          <h3 class="countdown__title">Menghitung hari menuju hari bahagia</h3>
+          <div
+            class="countdown__grid"
+            id="countdown"
+            aria-label="Hitung mundur menuju acara"
+            aria-live="off"
+          >
+            <div class="countdown__unit">
+              <span class="countdown__number" data-countdown="days">000</span>
+              <span class="countdown__label">Hari</span>
+            </div>
+            <div class="countdown__unit">
+              <span class="countdown__number" data-countdown="hours">00</span>
+              <span class="countdown__label">Jam</span>
+            </div>
+            <div class="countdown__unit">
+              <span class="countdown__number" data-countdown="minutes">00</span>
+              <span class="countdown__label">Menit</span>
+            </div>
+            <div class="countdown__unit">
+              <span class="countdown__number" data-countdown="seconds">00</span>
+              <span class="countdown__label">Detik</span>
+            </div>
+          </div>
+          <p class="countdown__status" id="countdown-status" role="status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section
+        class="section section--tinted gallery"
+        id="galeri"
+        aria-labelledby="gallery-title"
+      >
+        <p class="eyebrow">Simpan cerita dalam kenangan</p>
+        <h2 class="section__title" id="gallery-title">Galeri</h2>
+        <p class="section__intro">
+          Foto-foto kebahagiaan kami akan hadir di sini.
+        </p>
+        <div class="gallery__grid">
+          <figure class="gallery__item gallery__item--tall">
+            <img
+              src="/images/gallery-placeholder.svg"
+              alt="Placeholder foto galeri pernikahan"
+              loading="lazy"
+              decoding="async"
+              width="480"
+              height="640"
+            />
+          </figure>
+          <figure class="gallery__item">
+            <img
+              src="/images/gallery-placeholder.svg"
+              alt="Placeholder foto galeri pernikahan"
+              loading="lazy"
+              decoding="async"
+              width="480"
+              height="640"
+            />
+          </figure>
+          <figure class="gallery__item">
+            <img
+              src="/images/gallery-placeholder.svg"
+              alt="Placeholder foto galeri pernikahan"
+              loading="lazy"
+              decoding="async"
+              width="480"
+              height="640"
+            />
+          </figure>
+        </div>
+        <p class="gallery__note">Galeri foto akan dilengkapi nanti.</p>
+      </section>
+
+      <section class="section wishes" id="ucapan" aria-labelledby="wishes-title">
+        <p class="eyebrow">Doa dan harapan</p>
+        <h2 class="section__title" id="wishes-title">Ucapan</h2>
+        <span class="ornament" aria-hidden="true">
+          <img src="/images/ornament.svg" alt="" width="44" height="44" loading="lazy" />
+        </span>
+        <p class="section__intro">Ruang untuk doa dan ucapan akan hadir nanti.</p>
+      </section>
+
+      <section class="section section--closing" aria-label="Penutup">
+        <p class="section__intro">
+          Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Anda berkenan
+          hadir dan memberikan doa restu.
+        </p>
+        <p class="closing__salutation">Wassalamu'alaikum warahmatullahi wabarakatuh</p>
+        <p class="closing__names">
+          <span data-couple-name="groom">Nama Mempelai Pria</span>
+          <span class="ampersand" aria-hidden="true">&amp;</span>
+          <span data-couple-name="bride">Nama Mempelai Wanita</span>
+        </p>
+      </section>
     </main>
+
+    <footer class="footer">
+      <p>Dibuat dengan penuh kasih</p>
+    </footer>
+
+    <nav class="bottom-nav" id="bottom-nav" aria-label="Navigasi undangan" inert>
+      <a class="bottom-nav__link" href="#home" aria-label="Home">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V10Z" />
+        </svg>
+        <span>Home</span>
+      </a>
+      <a class="bottom-nav__link" href="#mempelai" aria-label="Mempelai">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="9" cy="8" r="4" />
+          <path d="M2 21a7 7 0 0 1 14 0m3-13a4 4 0 0 1 0 8m-1 2a7 7 0 0 1 4 3" />
+        </svg>
+        <span>Mempelai</span>
+      </a>
+      <a class="bottom-nav__link" href="#acara" aria-label="Acara">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <rect x="3" y="5" width="18" height="16" rx="2" />
+          <path d="M16 3v4M8 3v4M3 10h18" />
+        </svg>
+        <span>Acara</span>
+      </a>
+      <a class="bottom-nav__link" href="#galeri" aria-label="Galeri">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <rect x="3" y="3" width="18" height="18" rx="2" />
+          <circle cx="8.5" cy="8.5" r="1.5" />
+          <path d="m21 15-5-5L5 21" />
+        </svg>
+        <span>Galeri</span>
+      </a>
+      <a class="bottom-nav__link" href="#ucapan" aria-label="Ucapan">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z" />
+        </svg>
+        <span>Ucapan</span>
+      </a>
+    </nav>
+
+    <div class="config-error" id="config-error" role="alert" hidden>
+      Informasi undangan tidak dapat dimuat. Silakan coba muat ulang halaman.
+    </div>
+    <noscript>
+      <p class="noscript-message">Aktifkan JavaScript untuk melihat undangan ini.</p>
+    </noscript>
   </body>
 </html>

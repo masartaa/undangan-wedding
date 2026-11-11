@@ -1,136 +1,70 @@
-# Website Undangan Pernikahan (Vercel)
+# Website Undangan Pernikahan
 
-Project ini disiapkan untuk deployment di Vercel dengan struktur sederhana: halaman statis di `public/` dan API serverless di `api/`.
+Undangan dibuat dengan HTML, CSS, dan JavaScript tanpa framework atau build step. Halaman publik berada di `public/` dan ditujukan untuk Cloudflare Pages.
 
-## 1. Persiapan awal
+## Pratinjau lokal
 
-Pastikan Node.js sudah terpasang di mesin Anda:
-
-```bash
-node -v
-npm -v
-```
-
-Install Vercel CLI:
+Pastikan Node.js dan npm tersedia, lalu dari direktori proyek jalankan:
 
 ```bash
-npm install -g vercel
+npx wrangler pages dev public
 ```
 
-Login ke Vercel:
+Buka URL yang ditampilkan Wrangler, biasanya `http://localhost:8788`.
 
-```bash
-vercel login
-```
+## Mengatur detail undangan
 
-## 2. Buat database PostgreSQL
+Ubah `public/config/event.json` untuk memperbarui:
 
-Untuk Vercel, gunakan salah satu opsi berikut:
+- Nama mempelai dan nama orang tua.
+- Tanggal dan waktu mulai serta selesai. Sertakan offset WIB `+07:00`, contohnya `2027-01-03T09:00:00+07:00`.
+- Zona waktu, nama dan alamat tempat acara, serta tautan Google Maps HTTPS.
+- Teks sambutan dan metadata pratinjau WhatsApp.
+- Tautan HTTPS musik latar. Nilai `null` menonaktifkan musik sampai tamu menekan tombol putar.
 
-- Vercel Postgres
-- Neon
-- Supabase/Postgres eksternal
+Nama tamu pada sampul bisa dikirim melalui tautan seperti `https://undangan-wedding.pages.dev/?to=Budi`. Nama ditampilkan sebagai teks, bukan sebagai HTML.
 
-Contoh dengan Vercel Postgres:
+Galeri dan bagian ucapan masih berupa kerangka. Formulir RSVP, API RSVP/ucapan, serta dashboard admin belum termasuk fase ini.
 
-1. Buka dashboard Vercel
-2. Pilih project
-3. Masuk ke Storage > Postgres
-4. Buat database baru
-5. Salin `DATABASE_URL`
+## Deploy ke Cloudflare Pages
 
-## 3. Jalankan migrasi SQL
+1. Pasang Node.js, lalu autentikasi ke Cloudflare:
 
-Setelah database siap, jalankan file migrasi:
+   ```bash
+   npx wrangler login
+   ```
 
-```bash
-psql "$DATABASE_URL" -f ./migrations/001_init.sql
-```
+2. Buat proyek Pages bernama `undangan-wedding` melalui dashboard Cloudflare atau CLI satu kali:
 
-Jika Anda memakai Neon atau Postgres lokal, gunakan command yang sesuai:
+   ```bash
+   npx wrangler pages project create undangan-wedding
+   ```
 
-```bash
-psql postgresql://user:password@host:5432/dbname -f ./migrations/001_init.sql
-```
+3. Dari direktori proyek, deploy folder halaman publik:
 
-## 4. Preview lokal
+   ```bash
+   npx wrangler pages deploy public --project-name=undangan-wedding
+   ```
 
-Jalankan preview Vercel di local:
+4. Buka URL `*.pages.dev` yang diberikan Cloudflare. Jika alamat proyek berbeda dari `undangan-wedding.pages.dev`, perbarui nilai `seo.url` dan `seo.image` di `public/config/event.json`, serta alamat absolut dalam tag Open Graph dan canonical di `public/index.html`, lalu deploy ulang. Perbarui juga teks placeholder pada gambar pratinjau `public/images/og-image.png` dan sumbernya `public/images/og-image.svg` saat nama mempelai sudah tersedia.
 
-```bash
-vercel dev
-```
-
-Lalu cek endpoint:
-
-```bash
-curl http://localhost:3000/api/health
-```
-
-Hasil yang diharapkan:
-
-```json
-{"ok":true}
-```
-
-## 5. Deploy ke Vercel
-
-Deploy ke preview:
-
-```bash
-vercel
-```
-
-Deploy ke production:
-
-```bash
-vercel --prod
-```
-
-Setelah deploy, Vercel akan memberikan URL seperti:
+## Struktur halaman
 
 ```text
-https://nama-project.vercel.app
+public/
+├── config/event.json
+├── images/
+├── scripts/app.js
+├── styles.css
+├── index.html
+└── robots.txt
+functions/
+└── api/health.js
+migrations/
+└── 001_init.sql
+wrangler.toml
 ```
 
-## 6. Atur environment secret
+Halaman menggunakan `Asia/Jakarta` untuk tanggal dan hitung mundur. Acara kalender `.ics` dibuat di browser dalam waktu UTC yang sama, tanpa mengirim data tamu ke server.
 
-Di dashboard Vercel, buka Project > Settings > Environment Variables, lalu tambahkan variabel berikut:
-
-- `DATABASE_URL`
-- `SESSION_SECRET`
-- variabel tambahan nanti seperti `ADMIN_USERNAME`, `ADMIN_PASSWORD`
-
-Pastikan semua secret tidak disimpan di repo.
-
-## 7. Struktur proyek
-
-```text
-.
-├── api/
-│   └── health.js
-├── migrations/
-│   └── 001_init.sql
-├── public/
-│   └── index.html
-├── README.md
-├── vercel.json
-├── .gitignore
-└── package.json (opsional)
-```
-
-## 8. Catatan keamanan
-
-- Jangan menaruh secret di dalam repository.
-- Gunakan `DATABASE_URL` dan `SESSION_SECRET` via environment variables.
-- Semua input dan output harus divalidasi dan di-escape saat fitur mulai ditambahkan.
-
-## 9. Verifikasi fase 0
-
-Setelah konfigurasi selesai, cek hal berikut:
-
-1. `public/index.html` menampilkan teks "Undangan segera hadir".
-2. `GET /api/health` mengembalikan `{"ok":true}`.
-3. Migrasi SQL berhasil dijalankan di database PostgreSQL tanpa error.
-
-Jika semua langkah di atas berhasil, fase 0 selesai dan siap dilanjutkan ke Fase 1.
+Tag robots dan `robots.txt` meminta mesin pencari untuk tidak mengindeks undangan. Kebijakan tersebut tidak mencegah orang yang memiliki tautan untuk membukanya.

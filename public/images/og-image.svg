@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#f8f5ed"/>
+  <rect x="22" y="22" width="1156" height="586" rx="8" stroke="#c3a45e" stroke-width="2"/>
+  <rect x="34" y="34" width="1132" height="562" rx="4" stroke="#dfd0ac" stroke-width="1"/>
+  <g stroke="#a88643" stroke-opacity=".53" stroke-width="2">
+    <path d="M83 325c45-47 50-115 12-153-28-28-76-22-92 13-12 27-1 60 26 70m1080 70c-45-47-50-115-12-153 28-28 76-22 92 13 12 27 1 60-26 70"/>
+    <path d="M88 343c36 34 71 52 115 56m894-56c-36 34-71 52-115 56"/>
+  </g>
+  <g fill="#946f27" font-family="Georgia,serif" text-anchor="middle">
+    <text x="600" y="154" font-size="21" letter-spacing="7">UNDANGAN RESEPSI PERNIKAHAN</text>
+    <text x="600" y="256" font-size="51">Nama Mempelai Pria</text>
+    <text x="600" y="316" font-size="35">&amp;</text>
+    <text x="600" y="380" font-size="51">Nama Mempelai Wanita</text>
+    <text x="600" y="464" font-size="24">3 Januari 2027 · 09.00–14.00 WIB</text>
+    <text x="600" y="513" font-size="22">Koffie Goen Tuntang</text>
+  </g>
+  <path d="M475 193h250M475 418h250" stroke="#c3a45e" stroke-width="1"/>
+</svg>
