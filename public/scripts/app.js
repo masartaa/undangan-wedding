@@ -1,4 +1,3 @@
-const configUrl = new URL("../config/event.json", import.meta.url);
 const nav = document.querySelector("#bottom-nav");
 const openInvitationButton = document.querySelector("#open-invitation");
 const calendarButton = document.querySelector("#calendar-download");
@@ -153,7 +152,7 @@ const downloadCalendarInvite = (event, groomName, brideName) => {
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
     "BEGIN:VEVENT",
-    "UID:resepsi-20270103@undangan-wedding.pages.dev",
+    "UID:resepsi-20270103@undangan-wedding.vercel.app",
     `DTSTAMP:${stamp}`,
     `DTSTART:${start}`,
     `DTEND:${end}`,
@@ -360,7 +359,10 @@ const submitWish = async (event) => {
 };
 
 const loadConfig = async () => {
-  const response = await fetch(configUrl, { headers: { Accept: "application/json" } });
+  const response = await fetch("/api/config", {
+    cache: "no-store",
+    headers: { Accept: "application/json" }
+  });
   if (!response.ok) {
     throw new Error(`Gagal memuat konfigurasi undangan (${response.status}).`);
   }

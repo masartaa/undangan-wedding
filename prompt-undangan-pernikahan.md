@@ -10,7 +10,7 @@ Turunan dari PRD Website Undangan Pernikahan. Dipakai untuk vibe coding per fase
 4. Setelah fase selesai: uji sesuai bagian "Selesai jika", lalu **commit** sebelum lanjut.
 5. Setelah **Fase 2** undangan sudah bisa dibagikan dan menerima ucapan, walaupun dashboard belum jadi. Target bagikan paling lambat **12 Desember 2026**.
 
-Catatan: pilihan stack (HTML/CSS/JS biasa tanpa framework di atas Cloudflare Pages) adalah usulan agar sederhana dan mudah dirawat. Ganti di Konteks Proyek jika Anda ingin framework lain.
+Catatan: stack yang dipilih adalah HTML/CSS/JS biasa tanpa framework di Vercel, dengan Supabase untuk database. Ganti di Konteks Proyek jika Anda ingin framework atau layanan lain.
 
 ---
 
@@ -28,9 +28,9 @@ DATA ACARA
 - Nama mempelai, nama orang tua, teks sambutan, foto: [ISI NANTI / pakai placeholder dulu]
 
 STACK
-- Cloudflare Pages (halaman statis) + Pages Functions (API di folder /functions) + D1 (database)
+- Vercel (halaman statis + Serverless Functions di folder /api) + Supabase (PostgreSQL)
 - Frontend: HTML, CSS, JavaScript biasa, tanpa framework dan tanpa build step
-- Tautan gratis (*.pages.dev), tanpa domain sendiri
+- Tautan gratis (*.vercel.app), tanpa domain sendiri
 
 PRINSIP
 - Mobile-first, ringan (target halaman awal < 2 MB, terbuka < 3 detik di 4G)
@@ -39,7 +39,7 @@ PRINSIP
 - Bahasa antarmuka: Indonesia
 - JANGAN menambah fitur di luar PRD: tidak ada amplop digital/rekening, live streaming, QR check-in, multi-bahasa, atau multi-pengguna.
 
-FASE SAAT INI: [Fase 2 - Ucapan saja, tanpa RSVP]
+FASE SAAT INI: [Fase 3 - Dashboard inti]
 ```
 
 ---
@@ -50,20 +50,20 @@ FASE SAAT INI: [Fase 2 - Ucapan saja, tanpa RSVP]
 FASE 0 - FONDASI
 
 Tugas:
-1. Buat struktur proyek: public/ (halaman statis), functions/api/ (endpoint), migrations/ (SQL D1), wrangler.toml, README.md.
-2. Rancang skema D1 dan tulis sebagai file migrasi SQL:
+1. Buat struktur proyek: public/ (halaman statis), api/ (endpoint Vercel), supabase/migrations/ (SQL PostgreSQL), vercel.json, README.md.
+2. Rancang skema Supabase/PostgreSQL dan tulis sebagai file migrasi SQL:
    - event_config: satu baris konfigurasi acara (JSON): tanggal-waktu, nama tempat, alamat, tautan Maps, tema, teks, foto, musik
-   - wishes: id, name, message, hidden (0/1), created_at
+   - wishes: id, name, message, hidden (boolean), created_at
    - admin: satu akun (username, password_hash, salt, created_at)
-   - rate_limit: key, count, window_start (untuk pembatasan kiriman)
-3. Buat endpoint GET /api/health yang mengembalikan {"ok": true}.
+   - rate_limit: rate_key, count, window_start (untuk pembatasan kiriman)
+3. Buat endpoint Vercel GET /api/health yang mengembalikan {"ok": true}.
 4. Buat halaman awal public/index.html bertuliskan "Undangan segera hadir".
-5. Tulis README langkah demi langkah: login wrangler, membuat database D1, menjalankan migrasi (lokal dan produksi), deploy ke Cloudflare Pages, mengatur environment secret. Sertakan perintah persisnya.
+5. Tulis README langkah demi langkah: membuat proyek Supabase, menjalankan SQL migrasi, mengatur environment variable rahasia di Vercel, menjalankan lokal dengan Vercel CLI, dan deploy ke Vercel. Sertakan perintah persisnya.
 
 Jangan membuat tampilan undangan atau fitur lain di fase ini.
 ```
 
-**Selesai jika:** halaman "Undangan segera hadir" terbuka di tautan *.pages.dev, `/api/health` mengembalikan ok, dan migrasi berjalan tanpa error.
+**Selesai jika:** halaman "Undangan segera hadir" terbuka di domain Vercel, `/api/health` mengembalikan ok, dan skema Supabase berhasil dibuat.
 
 ---
 
@@ -106,20 +106,21 @@ Tambahkan fitur agar tamu dapat mengirim dan membaca ucapan. RSVP ditiadakan ses
 
 Frontend:
 - Formulir ucapan: nama dan pesan (maksimal 300 karakter).
-- Daftar ucapan di halaman publik (hanya yang hidden = 0), terbaru di atas, dengan "muat lebih banyak".
+- Daftar ucapan di halaman publik (hanya yang hidden = false), terbaru di atas, dengan "muat lebih banyak".
 - Pesan sukses/gagal dan batas kiriman yang jelas dalam bahasa Indonesia; nama tamu otomatis terisi dari ?to= bila ada.
 
-Backend (Pages Functions + D1):
+Backend (Vercel Serverless Functions + Supabase):
 - POST /api/wishes, GET /api/wishes?page=N.
+- Akses Supabase dari server menggunakan REST API (`fetch`) dan environment variable `SUPABASE_URL` serta `SUPABASE_SECRET_KEY`; jangan pernah mengirim secret key ke browser.
 - Validasi sisi server: panjang, tipe, nilai yang diperbolehkan; tolak input kosong atau berlebihan.
-- Perlindungan spam: field honeypot tersembunyi, pembatasan 5 kiriman per 10 menit per IP memakai tabel rate_limit, dan kembalikan 429 bila terlampaui.
+- Perlindungan spam: field honeypot tersembunyi, pembatasan 5 kiriman per 10 menit per IP memakai tabel rate_limit dan fungsi PostgreSQL yang atomik, lalu kembalikan 429 bila terlampaui.
 - Escape semua output saat ditampilkan; jangan pernah memakai innerHTML untuk teks dari tamu.
 - Jangan mengumpulkan email atau nomor telepon.
 
 Jangan membuat RSVP atau dashboard di fase ini.
 ```
 
-**Selesai jika:** tamu bisa mengirim ucapan, data masuk ke D1, ucapan tampil dengan paginasi, kiriman beruntun ditolak, dan teks seperti `<script>alert(1)</script>` tampil sebagai teks biasa.
+**Selesai jika:** tamu bisa mengirim ucapan, data masuk ke Supabase, ucapan tampil dengan paginasi, kiriman beruntun ditolak, dan teks seperti `<script>alert(1)</script>` tampil sebagai teks biasa.
 
 > Setelah fase ini tamu dapat mengirim doa dan ucapan melalui undangan.
 
@@ -168,7 +169,7 @@ Tema:
 
 Konten:
 - Edit teks: nama mempelai, nama orang tua, teks sambutan, kutipan/ayat, judul dan deskripsi pratinjau WhatsApp.
-- Foto: unggah foto sampul, foto mempelai, dan foto galeri. Usulkan penyimpanan paling sederhana (mis. Cloudflare R2) dan jelaskan langkah aktivasinya; jika menyulitkan, sediakan opsi memasukkan URL gambar. Batasi ukuran dan tipe file, kompres ke WebP bila memungkinkan.
+- Foto: unggah foto sampul, foto mempelai, dan foto galeri. Usulkan penyimpanan paling sederhana (mis. Supabase Storage) dan jelaskan langkah aktivasinya; jika menyulitkan, sediakan opsi memasukkan URL gambar. Batasi ukuran dan tipe file, kompres ke WebP bila memungkinkan.
 - Musik: unggah atau tautkan satu berkas musik latar dan pilihan aktif/nonaktif.
 - Semua teks yang disimpan harus di-escape saat ditampilkan di halaman publik.
 

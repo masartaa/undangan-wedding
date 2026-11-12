@@ -1,0 +1,134 @@
+.admin-page {
+  min-height: 100vh;
+  padding: 2rem 1rem 4rem;
+  background:
+    radial-gradient(ellipse at 50% 0, var(--warna-panel), transparent 34rem),
+    var(--warna-latar);
+}
+
+.admin-shell {
+  width: min(100%, 42rem);
+  margin: 0 auto;
+}
+
+.admin-back-link {
+  color: var(--warna-utama);
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.admin-back-link:hover {
+  text-decoration: underline;
+}
+
+.admin-header {
+  margin: 2.5rem 0 1.75rem;
+  text-align: center;
+}
+
+.admin-title {
+  margin: 0;
+  color: var(--warna-utama);
+  font-family: var(--font-judul);
+  font-size: clamp(2rem, 8vw, 3rem);
+  font-weight: 400;
+}
+
+.admin-card {
+  padding: clamp(1.25rem, 5vw, 2rem);
+  border: 1px solid var(--warna-garis);
+  background: var(--warna-panel);
+  box-shadow: var(--bayangan-kartu);
+}
+
+.admin-card + .admin-card {
+  margin-top: 1.25rem;
+}
+
+.admin-card h2 {
+  margin: 0;
+  color: var(--warna-utama);
+  font-family: var(--font-judul);
+  font-size: 1.65rem;
+  font-weight: 400;
+}
+
+.admin-description {
+  margin: 0.35rem 0 0;
+  color: var(--warna-halus);
+  font-size: 0.9rem;
+}
+
+.admin-form {
+  display: grid;
+  gap: 1.1rem;
+  margin-top: 1.5rem;
+}
+
+.admin-form input,
+.admin-form textarea {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--warna-garis);
+  border-radius: 0.35rem;
+  background: var(--warna-latar);
+  color: var(--warna-teks);
+  font: inherit;
+}
+
+.admin-form textarea {
+  resize: vertical;
+}
+
+.admin-form input:focus-visible,
+.admin-form textarea:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--warna-utama) 48%, transparent);
+  outline-offset: 2px;
+}
+
+.admin-form__times,
+.admin-actions {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.admin-actions {
+  justify-items: start;
+  margin-top: 0.25rem;
+}
+
+.admin-card__heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.admin-card__heading .button {
+  flex: 0 0 auto;
+}
+
+.admin-status,
+.admin-global-status {
+  min-height: 1.5em;
+  margin: 0;
+  color: var(--warna-halus);
+  font-size: 0.9rem;
+}
+
+.admin-global-status {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+@media (min-width: 34rem) {
+  .admin-page {
+    padding-top: 3rem;
+  }
+
+  .admin-form__times,
+  .admin-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

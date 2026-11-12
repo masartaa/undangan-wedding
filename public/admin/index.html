@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#f8f5ed" />
+    <title>Admin Undangan Pernikahan</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/admin/admin.css" />
+    <script type="module" src="/admin/admin.js"></script>
+  </head>
+  <body class="admin-page">
+    <main class="admin-shell">
+      <a class="admin-back-link" href="/">Kembali ke undangan</a>
+      <header class="admin-header">
+        <p class="eyebrow">Pengelolaan undangan</p>
+        <h1 class="admin-title">Dashboard Admin</h1>
+      </header>
+
+      <section class="admin-card" id="login-panel" aria-labelledby="login-title">
+        <h2 id="login-title">Masuk</h2>
+        <p class="admin-description">Masuk untuk mengubah tanggal dan lokasi acara.</p>
+        <form class="admin-form" id="login-form">
+          <div class="form-field">
+            <label for="login-username">Username</label>
+            <input id="login-username" name="username" autocomplete="username" required />
+          </div>
+          <div class="form-field">
+            <label for="login-password">Kata sandi</label>
+            <input
+              id="login-password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              required
+            />
+          </div>
+          <button class="button button--primary" id="login-submit" type="submit">Masuk</button>
+          <p class="admin-status" id="login-status" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="admin-card" id="dashboard-panel" aria-labelledby="dashboard-title" hidden>
+        <div class="admin-card__heading">
+          <div>
+            <h2 id="dashboard-title">Detail acara</h2>
+            <p class="admin-description">Perubahan akan langsung tampil di halaman undangan.</p>
+          </div>
+          <button class="button button--outline" id="logout-button" type="button">Keluar</button>
+        </div>
+        <form class="admin-form" id="event-form">
+          <div class="form-field">
+            <label for="event-date">Tanggal acara</label>
+            <input id="event-date" name="date" type="date" required />
+          </div>
+          <div class="admin-form__times">
+            <div class="form-field">
+              <label for="event-start">Jam mulai (WIB)</label>
+              <input id="event-start" name="startTime" type="time" required />
+            </div>
+            <div class="form-field">
+              <label for="event-end">Jam selesai (WIB)</label>
+              <input id="event-end" name="endTime" type="time" required />
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="venue-name">Nama tempat</label>
+            <input id="venue-name" name="venueName" maxlength="120" required />
+          </div>
+          <div class="form-field">
+            <label for="venue-address">Alamat</label>
+            <textarea id="venue-address" name="venueAddress" maxlength="250" rows="2" required></textarea>
+          </div>
+          <div class="form-field">
+            <label for="maps-url">Tautan Google Maps (HTTPS)</label>
+            <input id="maps-url" name="mapsUrl" type="url" maxlength="2048" required />
+          </div>
+          <div class="admin-actions">
+            <button class="button button--primary" id="save-button" type="submit">
+              Simpan perubahan
+            </button>
+            <a class="button button--outline" href="/" target="_blank" rel="noopener noreferrer">
+              Lihat undangan
+            </a>
+          </div>
+          <p class="admin-status" id="event-status" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <p class="admin-global-status" id="global-status" role="status" aria-live="polite"></p>
+    </main>
+  </body>
+</html>
